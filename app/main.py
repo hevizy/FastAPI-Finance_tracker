@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from database import db
 from routers.users import users_router
 from routers.categories import categories_router
 from routers.transactions import transactions_router
