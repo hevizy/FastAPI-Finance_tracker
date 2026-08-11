@@ -19,6 +19,14 @@ def create_user(session: Session, user_in: UserCreate) -> User:
 
     return db_user
 
+def delete_user(session: Session, user_id: int):
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    session.delete(user)
+    session.commit()
+    return {"status": "success", "message": "User successfully deleted"}
+
 def get_all_users(session: Session, offset: int, limit: int) -> list[User]:
     users = session.exec(select(User).offset(offset).limit(limit)).all()
     return users

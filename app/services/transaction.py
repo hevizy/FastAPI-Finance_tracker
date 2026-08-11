@@ -17,6 +17,16 @@ def create_transaction(session: Session, transaction_in: TransactionCreate) -> T
 
     return transaction
 
+def delete_transaction(session: Session, transaction_id: int):
+    transaction = session.get(Transaction, transaction_id)
+    if not transaction:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    session.delete(transaction)
+    session.commit()
+    return {"status": "success", "message": "Transaction successfully deleted"}
+
+    return transaction
+
 def get_all_transactions(session: Session, offset: int, limit: int) -> list[Transaction]:
     transactions = session.exec(select(Transaction).offset(offset).limit(limit)).all()
     return transactions

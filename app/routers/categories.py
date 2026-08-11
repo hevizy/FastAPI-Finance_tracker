@@ -13,6 +13,9 @@ categories_router = APIRouter(prefix="/categories", tags=["categories"])
 def create_category(category_in: CategoryCreate, session: SessionDep) -> Category:
     return category_service.create_category(session, category_in)
 
+@categories_router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_category(session: SessionDep, category_id: int) -> None:
+    return category_service.delete_category(session, category_id)
 @categories_router.get("/", response_model=list[Category])
 def read_categories(
         session: SessionDep,

@@ -9,9 +9,13 @@ from services import transaction as transaction_service
 
 transactions_router = APIRouter(prefix="/transactions",tags=["transactions"],)
 
-@transactions_router.post("/", response_model=Transaction)
+@transactions_router.post("/", response_model=Transaction, status_code=status.HTTP_201_CREATED)
 def create_transaction(transaction_in: TransactionCreate, session: SessionDep) -> Transaction:
     return transaction_service.create_transaction(session, transaction_in)
+
+@transactions_router.delete("/{transaction_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_transaction(session: SessionDep, transaction_id: int):
+    return transaction_service.delete_transaction(session, transaction_id)
 
 @transactions_router.get("/", response_model=list[Transaction])
 def read_transactions(

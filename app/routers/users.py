@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
+from starlette import status
+
 from database.db import SessionDep
 from schemas.user import UserCreate
 from models.user import User
@@ -10,6 +12,10 @@ users_router = APIRouter(prefix="/users", tags=["users"])
 @users_router.post("/", response_model=User)
 def create_user(user_in: UserCreate, session: SessionDep) -> User:
     return user_service.create_user(session, user_in)
+
+@users_router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(session: SessionDep, user_id: int):
+    return user_service.delete_user(session, user_id)
 
 @users_router.get("/", response_model=list[User])
 def read_all_users(

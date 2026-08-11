@@ -14,6 +14,15 @@ def create_category(session: Session, category_in: CategoryCreate) -> Category:
     session.refresh(category)
     return category
 
+def delete_category(session: Session, category_id: int):
+    category = session.get(Category, category_id)
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    session.delete(category)
+    session.commit()
+    return {"status": "success", "message": "Category successfully deleted"}
+
+
 def get_all_category(session: Session, offset: int, limit: int) -> list[Category]:
     categories = session.exec(select(Category).offset(offset).limit(limit)).all()
     return categories
@@ -23,3 +32,4 @@ def get_category_by_id(session: Session, category_id: int) -> Category:
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
     return category
+
