@@ -12,6 +12,7 @@ def create_category(session: Session, category_in: CategoryCreate) -> Category:
     session.add(category)
     session.commit()
     session.refresh(category)
+
     return category
 
 def delete_category(session: Session, category_id: int):
@@ -20,6 +21,7 @@ def delete_category(session: Session, category_id: int):
         raise HTTPException(status_code=404, detail="Category not found")
     session.delete(category)
     session.commit()
+
     return {"status": "success", "message": "Category successfully deleted"}
 
 

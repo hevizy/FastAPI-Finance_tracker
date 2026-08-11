@@ -25,7 +25,6 @@ def delete_transaction(session: Session, transaction_id: int):
     session.commit()
     return {"status": "success", "message": "Transaction successfully deleted"}
 
-    return transaction
 
 def get_all_transactions(session: Session, offset: int, limit: int) -> list[Transaction]:
     transactions = session.exec(select(Transaction).offset(offset).limit(limit)).all()

@@ -12,7 +12,6 @@ def create_user(session: Session, user_in: UserCreate) -> User:
         username=user_in.username,
         hashed_password=hashed_pswd
     )
-
     session.add(db_user)
     session.commit()
     session.refresh(db_user)
@@ -25,6 +24,7 @@ def delete_user(session: Session, user_id: int):
         raise HTTPException(status_code=404, detail="User not found")
     session.delete(user)
     session.commit()
+
     return {"status": "success", "message": "User successfully deleted"}
 
 def get_all_users(session: Session, offset: int, limit: int) -> list[User]:
