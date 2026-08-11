@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlmodel import Session, select
 from models.category import Category
 from schemas.category import CategoryCreate
@@ -14,9 +15,11 @@ def create_category(session: Session, category_in: CategoryCreate) -> Category:
     return category
 
 def get_all_category(session: Session, offset: int, limit: int) -> list[Category]:
-    statement = select(Category).offset(offset).limit(limit)
-    return session.exec(statement)
+    categories = session.exec(select(Category).offset(offset).limit(limit)).all()
+    return categories
 
 def get_category_by_id(session: Session, category_id: int) -> Category:
-    statement = select(Category).where(Category.id == category_id)
-    return session.exec(statement).one_or_none()
+    category = session.get(Category, category_id)
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return category

@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlmodel import Session, select
 from models.user import User
 from schemas.user import UserCreate
@@ -19,12 +20,18 @@ def create_user(session: Session, user_in: UserCreate) -> User:
     return db_user
 
 def get_all_users(session: Session, offset: int, limit: int) -> list[User]:
-    statement = select(User).offset(offset).limit(limit)
-    return session.exec(statement).all()
+    users = session.exec(select(User).offset(offset).limit(limit)).all()
+    return users
 
 def get_user_by_email(session: Session, user_email: str) -> User:
-    return session.get(User, user_email)
+    user = session.get(User, user_email)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
 def get_user_by_id(session: Session, user_id: int) -> User:
-    return session.get(User, user_id)
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
