@@ -32,7 +32,9 @@ def get_all_users(session: Session, offset: int, limit: int) -> list[User]:
     return users
 
 def get_user_by_email(session: Session, user_email: str) -> User:
-    user = session.get(User, user_email)
+    statement = select(User).where(User.email == user_email)
+    user = session.exec(statement).first()
+
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
